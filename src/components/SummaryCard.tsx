@@ -20,7 +20,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto"
+      className="bg-white bg-opacity-80 rounded-lg shadow-md p-6 max-w-md mx-auto"
     >
       {/* Summary Logo */}
       <div className="flex items-center mb-4">
@@ -34,7 +34,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
       </div>
 
       {/* Summary Description */}
-      <p className="text-gray-600 text-sm text-justify tracking-wide font-light">{description}</p>
+      <p className="text-gray-600 text-[0.83rem] text-left tracking-wide font-light">{description}</p>
     </motion.div>
   );
 };

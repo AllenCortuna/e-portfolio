@@ -1,6 +1,7 @@
 "use client";
 import Awareness from "@/components/Awareness";
 import { BoxRevealDemo } from "@/components/BoxRevealDemo";
+import { Submitted } from "@/components/Submitted";
 import Summary from "@/components/Summary";
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
       <BoxRevealDemo />
       <Summary />
       <Awareness />
+      <Submitted/>
     </div>
   );
 }

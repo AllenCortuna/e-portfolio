@@ -61,7 +61,7 @@ const awarenessListData: AwarenessListItem[] = [
 
 const AwarenessList: React.FC = () => {
   return (
-    <div className="max-w-sm md:mt-10 mx-auto py-10">
+    <div className="max-w-sm mx-auto pb-10">
       {awarenessListData.map((item, index) => (
         <AwarenessListItemComponent key={index} item={item} index={index} />
       ))}

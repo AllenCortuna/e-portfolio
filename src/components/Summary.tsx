@@ -1,6 +1,11 @@
 import React from "react";
 import SummaryCard from "./SummaryCard";
-import { CircleFadingArrowUp, HardDriveDownload, Lightbulb, ShieldAlert } from "lucide-react"; // Importing icons from Lucide
+import {
+  CircleFadingArrowUp,
+  HardDriveDownload,
+  Lightbulb,
+  ShieldAlert,
+} from "lucide-react"; // Importing icons from Lucide
 
 const Summary = () => {
   return (
@@ -9,7 +14,7 @@ const Summary = () => {
         summaryLogo={<HardDriveDownload className="w-full h-full" />} // Icon as the logo
         summaryName="Pirated Software from Abroad"
         summaryTitle="Illegal foreign distribution of software"
-        description="Pirated software from abroad refers to unauthorized copies of software that are illegally distributed or obtained from foreign sources. This often involves duplicating, sharing, or selling software without the permission of the copyright holder, typically resulting in significant financial loss to software developers and companies. Pirated software may come from various channels, such as counterfeit physical copies or illegal downloads from foreign websites, and it violates intellectual property (IP) laws that protect creators' rights to control the distribution and use of their software."
+        description="Pirated software from abroad refers to unauthorized copies of software that are illegally distributed or obtained from foreign sources. This often involves duplicating, sharing, or selling software without the permission of the copyright holder, typically resulting in significant financial loss to software developers and companies. Pirated software may come from various channels, such as counterfeit physical copies or illegal downloads from foreign websites, and it violates intellectual property laws that protect creators' rights to control the distribution and use of their software."
       />
 
       <SummaryCard
@@ -24,7 +29,7 @@ const Summary = () => {
         summaryTitle="Enhancing software versus creating malware."
         description="Refers to the process of enhancing an existing software product by adding new features, fixing bugs, optimizing performance, improving user experience, or updating security protocols. This contributes to making the software more reliable, efficient, and user-friendly, and it often involves continuous development to meet evolving user needs and technological advancements."
       />
-            <SummaryCard
+      <SummaryCard
         summaryLogo={<ShieldAlert className="w-full h-full" />} // Icon as the logo
         summaryName="Protecting Software"
         summaryTitle="Protecting software through legal frameworks."
