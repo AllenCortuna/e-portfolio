@@ -4,7 +4,7 @@ import { CircleFadingArrowUp, HardDriveDownload, Lightbulb, ShieldAlert } from "
 
 const Summary = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 ">
       <SummaryCard
         summaryLogo={<HardDriveDownload className="w-full h-full" />} // Icon as the logo
         summaryName="Pirated Software from Abroad"
