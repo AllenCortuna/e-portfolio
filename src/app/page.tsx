@@ -1,8 +1,14 @@
+"use client";
+import Awareness from "@/components/Awareness";
+import { BoxRevealDemo } from "@/components/BoxRevealDemo";
+import Summary from "@/components/Summary";
+
 export default function Home() {
   return (
-    <div className="min-h-screen p-8">
-   page Lorem ipsum dolor sit amet consectetur adipisicing elit. Et voluptatibus eligendi doloremque cum tempora, enim consequatur incidunt quo quibusdam assumenda vitae mollitia! Minima recusandae modi a sint laboriosam excepturi unde.
-     
+    <div className="min-h-screen flex flex-col gap-5 p-8">
+      <BoxRevealDemo />
+      <Summary />
+      <Awareness />
     </div>
   );
 }
