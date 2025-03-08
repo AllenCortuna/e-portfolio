@@ -106,24 +106,32 @@ export default function Home() {
     const updatedSchedule = schedule.map((slot) =>
       slot.id === slotId ? { ...slot, assignedPerson: null } : slot
     );
-
+  
     const slot = schedule.find((s) => s.id === slotId);
     if (slot?.assignedPerson) {
       const person = slot.assignedPerson;
       const updatedPerson = { ...person, assignedSlots: person.assignedSlots - 1 };
-
+  
       if (person.type === "teacher") {
-        setTeachers(teachers.map((t) => (t.id === person.id ? updatedPerson : t)));
+        setTeachers((prevTeachers) =>
+          prevTeachers.map((t) => (t.id === person.id ? updatedPerson : t))
+        );
       } else {
-        setAdvisers(advisers.map((a) => (a.id === person.id ? updatedPerson : a)));
+        setAdvisers((prevAdvisers) =>
+          prevAdvisers.map((a) => (a.id === person.id ? updatedPerson : a))
+        );
       }
     }
-
+  
     setSchedule(updatedSchedule);
   };
 
+  // Filter out teachers and advisers who have reached their maximum assigned slots
+  const availableTeachers = teachers.filter((teacher) => teacher.assignedSlots < 6);
+  const availableAdvisers = advisers.filter((adviser) => adviser.assignedSlots < 5);
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 w-full">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Class Scheduler</h1>
@@ -169,7 +177,7 @@ export default function Home() {
                   className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <span className="text-gray-700">
-                    {teacher.name} - Assigned Slots: {teacher.assignedSlots}
+                    {teacher.name} 
                   </span>
                   <button
                     onClick={() => removePerson(teacher.id)}
@@ -191,7 +199,7 @@ export default function Home() {
                   className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <span className="text-gray-700">
-                    {adviser.name} - Assigned Slots: {adviser.assignedSlots}
+                    {adviser.name}
                   </span>
                   <button
                     onClick={() => removePerson(adviser.id)}
@@ -243,15 +251,15 @@ export default function Home() {
                           ) : (
                             <select
                               onChange={(e) => {
-                                const person = [...teachers, ...advisers].find(
+                                const person = [...availableTeachers, ...availableAdvisers].find(
                                   (p) => p.id === e.target.value
                                 );
                                 if (person) assignPersonToSlot(slot!.id, person);
                               }}
                               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                              <option value="">Assign</option>
-                              {[...teachers, ...advisers].map((person) => (
+                              <option value=""></option>
+                              {[...availableTeachers, ...availableAdvisers].map((person) => (
                                 <option key={person.id} value={person.id}>
                                   {person.name} ({person.type})
                                 </option>
