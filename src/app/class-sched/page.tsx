@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import * as XLSX from "xlsx"; // Import the xlsx library
 
 interface Person {
   id: string;
@@ -106,12 +107,12 @@ export default function Home() {
     const updatedSchedule = schedule.map((slot) =>
       slot.id === slotId ? { ...slot, assignedPerson: null } : slot
     );
-  
+
     const slot = schedule.find((s) => s.id === slotId);
     if (slot?.assignedPerson) {
       const person = slot.assignedPerson;
       const updatedPerson = { ...person, assignedSlots: person.assignedSlots - 1 };
-  
+
       if (person.type === "teacher") {
         setTeachers((prevTeachers) =>
           prevTeachers.map((t) => (t.id === person.id ? updatedPerson : t))
@@ -122,13 +123,41 @@ export default function Home() {
         );
       }
     }
-  
+
     setSchedule(updatedSchedule);
   };
 
   // Filter out teachers and advisers who have reached their maximum assigned slots
   const availableTeachers = teachers.filter((teacher) => teacher.assignedSlots < 6);
   const availableAdvisers = advisers.filter((adviser) => adviser.assignedSlots < 5);
+
+  // Function to export the schedule to Excel
+  const exportToExcel = () => {
+    // Create a 2D array representing the schedule table
+    const data = [];
+    // Add the header row
+    const header = ["Time", ...days];
+    data.push(header);
+
+    // Add rows for each timeslot
+    timeslots.forEach((time) => {
+      const row = [time];
+      days.forEach((day) => {
+        const slot = schedule.find((s) => s.day === day && s.time === time);
+        row.push(slot?.assignedPerson ? slot.assignedPerson.name : "");
+      });
+      data.push(row);
+    });
+
+    // Create a worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    // Create a workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Schedule");
+
+    // Export the file
+    XLSX.writeFile(workbook, "Schedule.xlsx");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 w-full">
@@ -177,7 +206,7 @@ export default function Home() {
                   className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <span className="text-gray-700">
-                    {teacher.name} 
+                    {teacher.name}
                   </span>
                   <button
                     onClick={() => removePerson(teacher.id)}
@@ -215,7 +244,15 @@ export default function Home() {
 
         {/* Schedule Table */}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Schedule</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-700">Schedule</h2>
+            <button
+              onClick={exportToExcel}
+              className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+            >
+              Export to Excel
+            </button>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
               <thead>
