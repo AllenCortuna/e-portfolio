@@ -18,7 +18,7 @@ interface Timeslot {
 }
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const timeslots = [
+const timeslotsOne = [
   "6:00am - 7:00am",
   "7:00am - 8:00am",
   "8:00am - 9:00am",
@@ -29,12 +29,23 @@ const timeslots = [
   "1:15pm - 2:15pm",
 ];
 
+const timeslotsTwo = [
+  "11:20am - 12:20pm",
+  "12:20pm - 1:20pm",
+  "1:20pm - 2:20pm",
+  "2:20pm - 3:20pm",
+  "3:20pm - 4:20pm",
+  "4:30pm - 5:30pm",
+  "6:30pm - 7:30pm",
+];
+
 export default function Home() {
   const [teachers, setTeachers] = useState<Person[]>([]);
   const [advisers, setAdvisers] = useState<Person[]>([]);
+  const [activeTimeslots, setActiveTimeslots] = useState<"timeslotsOne" | "timeslotsTwo">("timeslotsOne");
   const [schedule, setSchedule] = useState<Timeslot[]>(
     days.flatMap((day) =>
-      timeslots.map((time) => ({
+      timeslotsOne.map((time) => ({
         id: `${day}-${time}`,
         day,
         time,
@@ -45,6 +56,46 @@ export default function Home() {
 
   const [newName, setNewName] = useState("");
   const [newType, setNewType] = useState<"teacher" | "adviser">("teacher");
+
+  const toggleTimeslots = () => {
+    // Check if there are any assigned teachers or advisers
+    if (teachers.length > 0 || advisers.length > 0) {
+      const confirmChange = window.confirm(
+        "Switching timeslots will remove all teachers and advisers. Are you sure you want to proceed?"
+      );
+
+      if (!confirmChange) {
+        return; // Exit if the user cancels the action
+      }
+    }
+
+    // Remove all teachers and advisers
+    setTeachers([]);
+    setAdvisers([]);
+
+    // Clear all assigned persons from the schedule
+    const clearedSchedule = schedule.map((slot) => ({
+      ...slot,
+      assignedPerson: null,
+    }));
+    setSchedule(clearedSchedule);
+
+    // Switch to the other timeslot
+    const newTimeslots = activeTimeslots === "timeslotsOne" ? timeslotsTwo : timeslotsOne;
+    setActiveTimeslots(activeTimeslots === "timeslotsOne" ? "timeslotsTwo" : "timeslotsOne");
+
+    // Update the schedule with the new timeslots
+    const newSchedule = days.flatMap((day) =>
+      newTimeslots.map((time) => ({
+        id: `${day}-${time}`,
+        day,
+        time,
+        assignedPerson: null,
+      }))
+    );
+
+    setSchedule(newSchedule);
+  };
 
   const addPerson = () => {
     if (!newName.trim()) return;
@@ -140,7 +191,8 @@ export default function Home() {
     data.push(header);
 
     // Add rows for each timeslot
-    timeslots.forEach((time) => {
+    const currentTimeslots = activeTimeslots === "timeslotsOne" ? timeslotsOne : timeslotsTwo;
+    currentTimeslots.forEach((time) => {
       const row = [time];
       days.forEach((day) => {
         const slot = schedule.find((s) => s.day === day && s.time === time);
@@ -246,12 +298,20 @@ export default function Home() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-700">Schedule</h2>
-            <button
-              onClick={exportToExcel}
-              className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Export to Excel
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={toggleTimeslots}
+                className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Switch to {activeTimeslots === "timeslotsOne" ? "Senior High School" : "High School"}
+              </button>
+              <button
+                onClick={exportToExcel}
+                className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+              >
+                Export to Excel
+              </button>
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
@@ -266,7 +326,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {timeslots.map((time) => (
+                {(activeTimeslots === "timeslotsOne" ? timeslotsOne : timeslotsTwo).map((time) => (
                   <tr key={time} className="border-b border-gray-200 hover:bg-gray-50">
                     <td className="p-3 text-gray-700">{time}</td>
                     {days.map((day) => {
